@@ -1,0 +1,119 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(ScoreboardApp());
+}
+
+class ScoreboardApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Scoreboard App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: ScoreboardScreen(),
+    );
+  }
+}
+
+class ScoreboardScreen extends StatefulWidget {
+  @override
+  _ScoreboardScreenState createState() => _ScoreboardScreenState();
+}
+
+class _ScoreboardScreenState extends State<ScoreboardScreen> {
+  int scoreTeamA = 0;
+  int scoreTeamB = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Scoreboard'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Team A: $scoreTeamA',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Team B: $scoreTeamB',
+              style: TextStyle(fontSize: 20),
+            ),
+            SizedBox(height: 40),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      scoreTeamA++;
+                      if (scoreTeamA == 12) _showWinnerDialog('Team A');
+                    });
+                  },
+                  child: Text('+'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      scoreTeamA--;
+                      if (scoreTeamA < 0) scoreTeamA = 0;
+                    });
+                  },
+                  child: Text('-'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      scoreTeamB++;
+                      if (scoreTeamB == 12) _showWinnerDialog('Team B');
+                    });
+                  },
+                  child: Text('+'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      scoreTeamB--;
+                      if (scoreTeamB < 0) scoreTeamB = 0;
+                    });
+                  },
+                  child: Text('-'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showWinnerDialog(String winner) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Game Over'),
+          content: Text('$winner wins!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  scoreTeamA = 0;
+                  scoreTeamB = 0;
+                });
+              },
+              child: Text('Restart'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
